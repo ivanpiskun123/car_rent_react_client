@@ -159,18 +159,18 @@ function SignIn() {
           </VuiButton>
         </VuiBox>
         <VuiBox mt={3} textAlign="center">
-          <VuiTypography variant="button" color="text" fontWeight="regular">
-            У Вас нет аккаунта?{" "}
-            <VuiTypography
-              component={Link}
-              to="/authentication/sign-up"
-              variant="button"
-              color="white"
-              fontWeight="medium"
-            >
-             Зарегистрируйтесь
-            </VuiTypography>
-          </VuiTypography>
+          {/*<VuiTypography variant="button" color="text" fontWeight="regular">*/}
+          {/*  У Вас нет аккаунта?{" "}*/}
+          {/*  <VuiTypography*/}
+          {/*    component={Link}*/}
+          {/*    to="/authentication/sign-up"*/}
+          {/*    variant="button"*/}
+          {/*    color="white"*/}
+          {/*    fontWeight="medium"*/}
+          {/*  >*/}
+          {/*   Зарегистрируйтесь*/}
+          {/*  </VuiTypography>*/}
+          {/*</VuiTypography>*/}
         </VuiBox>
       </VuiBox>
     </CoverLayout>

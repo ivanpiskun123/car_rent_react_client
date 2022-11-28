@@ -90,7 +90,7 @@ function Sidenav({ color, brandName, routes, ...rest }) {
   const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, route, href }) => {
     let returnValue;
 
-    if(isAdmin && (["/rents","/profile","/payments"].includes(route))){
+    if(isAdmin && (["/rents","/profile","/payments","/users"].includes(route))){
         return null
     }
       if(!isAdmin && (["/users"].includes(route))){

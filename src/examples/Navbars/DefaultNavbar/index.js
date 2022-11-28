@@ -120,7 +120,7 @@ function DefaultNavbar({ transparent, light, action }) {
           </VuiTypography>
         </VuiBox>
         <VuiBox color="inherit" display={{ xs: "none", lg: "flex" }} m={0} p={0}>
-          <DefaultNavbarLink icon="account_circle" name="Создать аккаунт" route="/authentication/sign-up" />
+          {/*<DefaultNavbarLink icon="account_circle" name="Создать аккаунт" route="/authentication/sign-up" />*/}
           <DefaultNavbarLink icon="key" name="Войти" route="/authentication/sign-in" />
         </VuiBox>
         {action &&

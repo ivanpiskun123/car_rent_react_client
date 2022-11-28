@@ -131,6 +131,7 @@ export default function App() {
           r.route !== "/profile"
           &&
           r.route !== "/payments"
+
       )
     }
     else
@@ -208,7 +209,7 @@ export default function App() {
                 isAdmin ?
                     <>
                       {getRoutes(routes, false, true)}
-                      <Redirect from="*" to="/users" />
+                      <Redirect from="*" to="/cars" />
                     </>
                     :
                 <>

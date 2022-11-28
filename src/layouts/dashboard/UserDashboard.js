@@ -179,42 +179,7 @@ function UserDashboard() {
                                     </VuiTypography>
                                 </VuiBox>
                             </Grid>
-                            <Grid item xs={2} md={2}>
-                                <select name="pets" id="pet-select"
-                                        style={{backgroundColor: "#080841", color: "white",
-                                            borderRadius: "10px",
-                                            height: "35px",
-                                            width: "165px"}}
-                                        value={sort}
-                                        onChange={e => setSort(e.target.value) }
-                                >
-                                    <option value="name">По названию</option>
-                                    <option value="year">По году производства</option>
-                                    <option value="condition">По состоянию</option>
-                                    <option value="price">По стоимости аренды</option>
-                                    <option value="volume">По объему двигателя</option>
-                                    <option value="created">По дате аренды</option>
-                                </select>
-                            </Grid>
-                            <Grid item xs={2} md={2}>
-                                <VuiBox pr={1}>
-                                    <VuiInput
-                                        value={query}
-                                        onChange={(e)=>setQuery(e.target.value)}
-                                        placeholder="Поиск..."
-                                        icon={{ component: "search", direction: "left" }}
-                                        sx={({ breakpoints }) => ({
-                                            [breakpoints.down("sm")]: {
-                                                maxWidth: "80px",
-                                            },
-                                            [breakpoints.only("sm")]: {
-                                                maxWidth: "80px",
-                                            },
-                                            backgroundColor: "info.main !important",
-                                        })}
-                                    />
-                                </VuiBox>
-                            </Grid>
+
                         </Grid>
                         </Card>
                         <Grid container spacing={3}>

@@ -156,40 +156,7 @@ function Tables() {
                     </VuiTypography>
                 </VuiBox>
                     </Grid>
-                    <Grid item xs={2} md={2}>
-                        <select name="pets" id="pet-select"
-                        style={{backgroundColor: "#080841", color: "white",
-                            borderRadius: "10px",
-                            height: "35px",
-                            width: "165px"}}
-                                value={sort}
-                                onChange={e => setSort(e.target.value) }
-                        >
-                            <option value="active" selected>Сначала активные</option>
-                            <option value="ended">Сначала оконченные</option>
-                            <option value="paid">Сначала оплаченные</option>
-                            <option value="created">Сначала новые</option>
-                        </select>
-                    </Grid>
-                        <Grid item xs={2} md={2}>
-                <VuiBox pr={1}>
-                    <VuiInput
-                        value={query}
-                        onChange={(e)=>setQuery(e.target.value)}
-                        placeholder="Поиск..."
-                        icon={{ component: "search", direction: "left" }}
-                        sx={({ breakpoints }) => ({
-                            [breakpoints.down("sm")]: {
-                                maxWidth: "80px",
-                            },
-                            [breakpoints.only("sm")]: {
-                                maxWidth: "80px",
-                            },
-                            backgroundColor: "info.main !important",
-                        })}
-                    />
-                </VuiBox>
-                    </Grid>
+
             </Grid>
                 </Card>
                 <Grid container spacing={3}>
