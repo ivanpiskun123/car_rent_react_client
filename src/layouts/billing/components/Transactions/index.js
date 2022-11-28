@@ -27,8 +27,9 @@ import VuiTypography from "components/VuiTypography";
 
 // Billing page components
 import Transaction from "layouts/billing/components/Transaction";
+import Bill from "../Bill";
 
-function Transactions() {
+function Transactions({payments}) {
   return (
     <Card sx={{ height: "100%" }}>
       <VuiBox
@@ -53,18 +54,9 @@ function Transactions() {
             },
           })}
         >
-          Your Transaction&apos;s
+          Все платежи
         </VuiTypography>
-        <VuiBox display="flex" alignItems="flex-start">
-          <VuiBox color="white" mr="6px" lineHeight={0}>
-            <Icon color="inherit" fontSize="small">
-              date_range
-            </Icon>
-          </VuiBox>
-          <VuiTypography variant="button" color="text" fontWeight="regular">
-            23 - 30 March 2020
-          </VuiTypography>
-        </VuiBox>
+
       </VuiBox>
       <VuiBox>
         <VuiBox mb={2}>
@@ -74,32 +66,35 @@ function Transactions() {
             fontWeight="medium"
             textTransform="uppercase"
           >
-            newest
+            Открытые платежи
           </VuiTypography>
         </VuiBox>
+
         <VuiBox
-          component="ul"
-          display="flex"
-          flexDirection="column"
-          p={0}
-          m={0}
-          sx={{ listStyle: "none" }}
+            component="ul"
+            display="flex"
+            flexDirection="column"
+            p={0}
+            m={0}
+            sx={{ listStyle: "none" }}
         >
-          <Transaction
-            color="error"
-            icon="arrow_downward"
-            name="Netflix"
-            description="27 March 2020, at 12:30 PM"
-            value="- $ 2,500"
-          />
-          <Transaction
-            color="success"
-            icon="arrow_upward"
-            name="Apple"
-            description="27 March 2020, at 04:30 AM"
-            value="+ $ 2,000"
-          />
+        {
+          payments.filter((p)=>!p.isPaid).length === 0 ?
+              "Открытых платежей нет"
+              :
+              payments.filter((p)=>!p.isPaid).map((p)=>
+                  <Transaction
+                      color="error"
+                      icon="arrow_downward"
+                      name={p.rentedCarFullName}
+                      description={p.createdAt}
+                      value={""+p.amount + " y.e." }
+                  />
+              )
+        }
         </VuiBox>
+
+
         <VuiBox mt={1} mb={2}>
           <VuiTypography
             variant="caption"
@@ -107,9 +102,10 @@ function Transactions() {
             fontWeight="medium"
             textTransform="uppercase"
           >
-            yesterday
+            Закрытые платежи
           </VuiTypography>
         </VuiBox>
+
         <VuiBox
           component="ul"
           display="flex"
@@ -118,35 +114,25 @@ function Transactions() {
           m={0}
           sx={{ listStyle: "none" }}
         >
-          <Transaction
-            color="success"
-            icon="arrow_upward"
-            name="Stripe"
-            description="26 March 2020, at 13:45 PM"
-            value="+ $ 750"
-          />
-          <Transaction
-            color="success"
-            icon="arrow_upward"
-            name="HubSpot"
-            description="26 March 2020, at 12:30 PM"
-            value="+ $ 1,000"
-          />
-          <Transaction
-            color="success"
-            icon="arrow_upward"
-            name="HubSpot"
-            description="26 March 2020, at 08:30 AM"
-            value="+ $ 2,500"
-          />
-          <Transaction
-            color="text"
-            icon="priority_high"
-            name="Webflow"
-            description="26 March 2020, at 05:00 AM"
-            value="Pending"
-          />
+
+          {
+            payments.filter((p)=>p.isPaid).length === 0 ?
+                "Закрытых платежей нет"
+                :
+                payments.filter((p)=>p.isPaid).map((p)=>
+                    <Transaction
+                        color="success"
+                        icon="arrow_upward"
+                        name={p.rentedCarFullName}
+                        description={p.createdAt}
+                        value={""+p.amount + " y.e." }
+                    />
+                )
+          }
+
+
         </VuiBox>
+
       </VuiBox>
     </Card>
   );

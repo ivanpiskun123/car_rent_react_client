@@ -22,11 +22,11 @@ import welcome from "assets/images/welcome-profile.png";
 import VuiTypography from "components/VuiTypography/index";
 import VuiBox from "components/VuiBox/index";
 
-const Welcome = () => {
+const Welcome = ({user}) => {
   return (
     <Card
       sx={({ breakpoints }) => ({
-        background: `url(${welcome})`,
+        background: `url(${user!== null ? user.relationships.image.meta.url : welcome})`,
         backgroundSize: "cover",
         borderRadius: "20px",
         height: "100%",
@@ -37,12 +37,10 @@ const Welcome = () => {
     >
       <VuiBox display="flex" flexDirection="column" sx={{ height: "100%" }}>
         <VuiBox display="flex" flexDirection="column" mb="auto">
-          <VuiTypography color="white" variant="h3" fontWeight="bold" mb="3px">
+          <VuiTypography color="#080841" variant="h3" fontWeight="bold" mb="3px">
             Приветствуем!
           </VuiTypography>
-          <VuiTypography color="white" variant="button" fontWeight="regular">
-            Nice to see you, Mark Johnson!
-          </VuiTypography>
+
         </VuiBox>
         <VuiBox justifySelf="flex-end">
           <VuiTypography
@@ -69,7 +67,7 @@ const Welcome = () => {
               },
             }}
           >
-            Tap to record
+            Перейти выше
             <Icon sx={{ fontWeight: "bold", ml: "5px" }}>arrow_forward</Icon>
           </VuiTypography>
         </VuiBox>

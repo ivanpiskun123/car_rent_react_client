@@ -1,18 +1,8 @@
 import axios from "axios";
 
-export default class CarService {
+export default class UserService {
     static async getAll(){
-        const response =  axios.get(`http://localhost:3000/api/v1/cars`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': localStorage.getItem('token')
-            }
-        });
-        return response
-    }
-
-    static async getRentingAll(){
-        const response =  axios.get(`http://localhost:3000/api/v1/cars?renting=true`, {
+        const response =  axios.get(`http://localhost:3000/api/v1/users`, {
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('token')
@@ -22,7 +12,7 @@ export default class CarService {
     }
 
     static async getById(id){
-        const response =  axios.get(`http://localhost:3000/api/v1/cars/${id}`, {
+        const response =  axios.get(`http://localhost:3000/api/v1/users/${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('token')
@@ -31,8 +21,8 @@ export default class CarService {
         return response
     }
 
-    static async toRent(id){
-        const response =  axios.get(`http://localhost:3000/api/v1/cars/to_rent?id=${id}`, {
+    static async getShortById(id){
+        const response =  axios.get(`http://localhost:3000/api/v1/users/short_show?id=${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('token')
@@ -41,8 +31,8 @@ export default class CarService {
         return response
     }
 
-    static async toRepair(id){
-        const response =  axios.get(`http://localhost:3000/api/v1/cars/to_repair?id=${id}`, {
+    static async rejectDocByUserId(id){
+        const response =  axios.get(`http://localhost:3000/api/v1/users/reject_doc?id=${id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'authorization': localStorage.getItem('token')
@@ -50,5 +40,16 @@ export default class CarService {
         });
         return response
     }
+
+    static async approveDocByUserId(id){
+        const response =  axios.get(`http://localhost:3000/api/v1/users/approve_doc?id=${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': localStorage.getItem('token')
+            }
+        });
+        return response
+    }
+
 
 }

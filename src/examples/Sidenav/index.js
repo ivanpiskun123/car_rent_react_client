@@ -90,12 +90,19 @@ function Sidenav({ color, brandName, routes, ...rest }) {
   const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, route, href }) => {
     let returnValue;
 
+    if(isAdmin && (["/rents","/profile","/payments"].includes(route))){
+        return null
+    }
+      if(!isAdmin && (["/users"].includes(route))){
+          return null
+      }
+
     if(name === "Войти" || name === "Регистрация")
     {
         return null
     }
 
-    if (type === "collapse") {
+    if (type === "collapse" ) {
       returnValue =  (
         <NavLink to={route} key={key}>
           <SidenavCollapse
@@ -108,7 +115,7 @@ function Sidenav({ color, brandName, routes, ...rest }) {
           />
         </NavLink>
       );
-    } else if (type === "title") {
+    } else if (type === "title" && !isAdmin) {
       returnValue = (
         <VuiTypography
           key={key}

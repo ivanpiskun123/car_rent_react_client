@@ -13,7 +13,7 @@ export default class AuthService {
     }
 
     static async register(user){
-        const response =  axios.post('http://localhost:3000/api/v1/users/sign_up',
+        const response =  axios.post('http://localhost:3000/api/v1/users',
             {
                 user
             },

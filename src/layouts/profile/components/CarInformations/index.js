@@ -29,9 +29,21 @@ import LineChart from 'examples/Charts/LineCharts/LineChart';
 import { lineChartDataProfile1, lineChartDataProfile2 } from 'variables/charts';
 import { lineChartOptionsProfile2, lineChartOptionsProfile1 } from 'variables/charts';
 import CircularProgress from '@mui/material/CircularProgress';
-const CarInformations = () => {
+
+
+
+const CarInformations = ({user}) => {
 	const { gradients, info } = colors;
 	const { cardContent } = gradients;
+
+	const getUnpaidCount = (user) => {
+		return user.meta.total_payments_count - user.meta.paid_payments_count
+	}
+
+	const getPercentOfLimit = (user) => {
+		return getUnpaidCount(user)/5*100
+	}
+
 	return (
 		<Card
 			sx={({ breakpoints }) => ({
@@ -44,7 +56,7 @@ const CarInformations = () => {
 					Статус аренд
 				</VuiTypography>
 				<VuiTypography variant='button' color='text' fontWeight='regular' mb='30px'>
-					Количество оплаченных аренд
+					Количество неоплаченных аренд
 				</VuiTypography>
 				<Stack
 					spacing='24px'
@@ -71,14 +83,27 @@ const CarInformations = () => {
 						})}
 						alignItems='center'>
 						<VuiBox sx={{ position: 'relative', display: 'inline-flex' }}>
-							<CircularProgress variant='determinate' value={60} size={170} color='info' mr={2} />
+							{
+								user === null ?
+									null
+									:
+									getUnpaidCount(user) > 2 ?
+									<CircularProgress variant='determinate' value={getPercentOfLimit(user)} size={100} color='error' mr={2} />
+									:
+									<CircularProgress variant='determinate' value={getPercentOfLimit(user)} size={100} color='info' mr={2} />
+							}
+
 							<VuiBox display='flex' flexDirection='column' justifyContent='center' alignItems='center' ml={2}>
 								<VuiBox component='img' src={GreenLightning} />
 								<VuiTypography color='white' variant='h2' mt='6px' fontWeight='bold' mb='4px'>
-									80%
+									{
+										user === null ?
+											0
+											:
+									getPercentOfLimit(user)}%
 								</VuiTypography>
 								<VuiTypography color='text' variant='caption'>
-									Прогресс до бонуса
+									Лимит неоплаченных аренд
 								</VuiTypography>
 							</VuiBox>
 						</VuiBox>
@@ -88,10 +113,15 @@ const CarInformations = () => {
 							flexDirection='column'
 							sx={{ textAlign: 'center' }}>
 							<VuiTypography color='white' variant='lg' fontWeight='bold' mb='2px' mt='18px'>
-								4 аренды
+								{
+									user === null ?
+										0
+										:
+									getUnpaidCount(user)
+								} аренд
 							</VuiTypography>
 							<VuiTypography color='text' variant='button' fontWeight='regular'>
-								Оплаченные аренды
+								неоплачено
 							</VuiTypography>
 						</VuiBox>
 					</VuiBox>
@@ -112,152 +142,162 @@ const CarInformations = () => {
 								mx: 'auto !important'
 							}
 						})}>
-						<Grid item xs={12} md={5.5} xl={5.8} xxl={5.5}>
-							<VuiBox
-								display='flex'
-								p='18px'
-								alignItems='center'
-								sx={{
-									background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
-									minHeight: '110px',
-									borderRadius: '20px'
-								}}>
-								<VuiBox display='flex' flexDirection='column' mr='auto'>
-									<VuiTypography color='text' variant='caption' fontWeight='medium' mb='2px'>
-										Battery Health
-									</VuiTypography>
-									<VuiTypography
-										color='white'
-										variant='h4'
-										fontWeight='bold'
-										sx={({ breakpoints }) => ({
-											[breakpoints.only('xl')]: {
-												fontSize: '20px'
-											}
-										})}>
-										76%
-									</VuiTypography>
-								</VuiBox>
-								<VuiBox
-									display='flex'
-									justifyContent='center'
-									alignItems='center'
-									sx={{
-										background: info.main,
-										borderRadius: '12px',
-										width: '56px',
-										height: '56px'
-									}}>
-									<VuiBox component='img' src={carProfile} />
-								</VuiBox>
-							</VuiBox>
-						</Grid>
-						<Grid item xs={12} md={5.5} xl={5.8} xxl={5.5}>
-							<VuiBox
-								display='flex'
-								p='18px'
-								alignItems='center'
-								sx={{
-									background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
-									borderRadius: '20px'
-								}}>
-								<VuiBox display='flex' flexDirection='column' mr='auto'>
-									<VuiTypography color='text' variant='caption' fontWeight='medium' mb='2px'>
-										Efficiency
-									</VuiTypography>
-									<VuiTypography
-										color='white'
-										variant='h4'
-										fontWeight='bold'
-										sx={({ breakpoints }) => ({
-											[breakpoints.only('xl')]: {
-												fontSize: '20px'
-											}
-										})}>
-										+20%
-									</VuiTypography>
-								</VuiBox>
-								<VuiBox sx={{ maxHeight: '75px' }}>
-									<LineChart
-										lineChartData={lineChartDataProfile1}
-										lineChartOptions={lineChartOptionsProfile1}
-									/>
-								</VuiBox>
-							</VuiBox>
-						</Grid>
-						<Grid item xs={12} md={5.5} xl={5.8} xxl={5.5}>
-							<VuiBox
-								display='flex'
-								p='18px'
-								alignItems='center'
-								sx={{
-									background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
-									borderRadius: '20px',
-									minHeight: '110px'
-								}}>
-								<VuiBox display='flex' flexDirection='column' mr='auto'>
-									<VuiTypography color='text' variant='caption' fontWeight='medium' mb='2px'>
-										Consumption
-									</VuiTypography>
-									<VuiTypography
-										color='white'
-										variant='h4'
-										fontWeight='bold'
-										sx={({ breakpoints }) => ({
-											[breakpoints.only('xl')]: {
-												fontSize: '20px'
-											}
-										})}>
-										163W/km
-									</VuiTypography>
-								</VuiBox>
-								<VuiBox
-									display='flex'
-									justifyContent='center'
-									alignItems='center'
-									sx={{
-										background: info.main,
-										borderRadius: '12px',
-										width: '56px',
-										height: '56px'
-									}}>
-									<VuiBox component='img' src={WhiteLightning} />
-								</VuiBox>
-							</VuiBox>
-						</Grid>
-						<Grid item xs={12} md={5.5} xl={5.8} xxl={5.5}>
-							<VuiBox
-								display='flex'
-								p='18px'
-								alignItems='center'
-								sx={{
-									background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
-									borderRadius: '20px'
-								}}>
-								<VuiBox display='flex' flexDirection='column' mr='auto'>
-									<VuiTypography color='text' variant='caption' fontWeight='medium' mb='2px'>
-										This Week
-									</VuiTypography>
-									<VuiTypography
-										color='white'
-										variant='h4'
-										fontWeight='bold'
-										sx={({ breakpoints }) => ({
-											[breakpoints.only('xl')]: {
-												fontSize: '20px'
-											}
-										})}>
-										1.342km
-									</VuiTypography>
-								</VuiBox>
-								<VuiBox sx={{ maxHeight: '75px' }}>
-									<LineChart
-										lineChartData={lineChartDataProfile2}
-										lineChartOptions={lineChartOptionsProfile2}
-									/>
-								</VuiBox>
-							</VuiBox>
-						</Grid>
+
+						{
+							user !== null ?
+								<>
+									<Grid item xs={12} md={5.5} xl={5.8} xxl={5.5}>
+										<VuiBox
+											display='flex'
+											p='18px'
+											alignItems='center'
+											sx={{
+												background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
+												minHeight: '110px',
+												borderRadius: '20px'
+											}}>
+											<VuiBox display='flex' flexDirection='column' mr='auto'>
+												<VuiTypography color='text' variant='caption' fontWeight='medium' mb='2px'>
+													Активных аренд
+												</VuiTypography>
+												<VuiTypography
+													color='white'
+													variant='h4'
+													fontWeight='bold'
+													sx={({ breakpoints }) => ({
+														[breakpoints.only('xl')]: {
+															fontSize: '20px'
+														}
+													})}>
+													{user.meta.active_rents_count} аренд
+												</VuiTypography>
+											</VuiBox>
+											<VuiBox
+												display='flex'
+												justifyContent='center'
+												alignItems='center'
+												sx={{
+													background: info.main,
+													borderRadius: '12px',
+													width: '56px',
+													height: '56px'
+												}}>
+												<VuiBox component='img' src={carProfile} />
+											</VuiBox>
+										</VuiBox>
+									</Grid>
+									<Grid item xs={12} md={5.5} xl={5.8} xxl={5.5}>
+										<VuiBox
+											display='flex'
+											p='18px'
+											alignItems='center'
+											sx={{
+												background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
+												borderRadius: '20px'
+											}}>
+											<VuiBox display='flex' flexDirection='column' mr='auto'>
+												<VuiTypography color='text' variant='caption' fontWeight='medium' mb='2px'>
+													Закрытых платежей
+												</VuiTypography>
+												<VuiTypography
+													color='white'
+													variant='h4'
+													fontWeight='bold'
+													sx={({ breakpoints }) => ({
+														[breakpoints.only('xl')]: {
+															fontSize: '20px'
+														}
+													})}>
+													{user.meta.paid_payments_count}
+												</VuiTypography>
+											</VuiBox>
+											<VuiBox sx={{ maxHeight: '75px' }}>
+												<LineChart
+													lineChartData={lineChartDataProfile1}
+													lineChartOptions={lineChartOptionsProfile1}
+												/>
+											</VuiBox>
+										</VuiBox>
+									</Grid>
+									<Grid item xs={12} md={5.5} xl={5.8} xxl={5.5}>
+										<VuiBox
+											display='flex'
+											p='18px'
+											alignItems='center'
+											sx={{
+												background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
+												borderRadius: '20px',
+												minHeight: '110px'
+											}}>
+											<VuiBox display='flex' flexDirection='column' mr='auto'>
+												<VuiTypography color='text' variant='caption' fontWeight='medium' mb='2px'>
+													Всего аренд
+												</VuiTypography>
+												<VuiTypography
+													color='white'
+													variant='h4'
+													fontWeight='bold'
+													sx={({ breakpoints }) => ({
+														[breakpoints.only('xl')]: {
+															fontSize: '20px'
+														}
+													})}>
+													{user.meta.total_rents_count} аренд
+												</VuiTypography>
+											</VuiBox>
+											<VuiBox
+												display='flex'
+												justifyContent='center'
+												alignItems='center'
+												sx={{
+													background: info.main,
+													borderRadius: '12px',
+													width: '56px',
+													height: '56px'
+												}}>
+												<VuiBox component='img' src={WhiteLightning} />
+											</VuiBox>
+										</VuiBox>
+									</Grid>
+									<Grid item xs={12} md={5.5} xl={5.8} xxl={5.5}>
+										<VuiBox
+											display='flex'
+											p='18px'
+											alignItems='center'
+											sx={{
+												background: linearGradient(cardContent.main, cardContent.state, cardContent.deg),
+												borderRadius: '20px'
+											}}>
+											<VuiBox display='flex' flexDirection='column' mr='auto'>
+												<VuiTypography color='text' variant='caption' fontWeight='medium' mb='2px'>
+													Всего платежей
+												</VuiTypography>
+												<VuiTypography
+													color='white'
+													variant='h4'
+													fontWeight='bold'
+													sx={({ breakpoints }) => ({
+														[breakpoints.only('xl')]: {
+															fontSize: '20px'
+														}
+													})}>
+													{user.meta.total_payments_count}
+												</VuiTypography>
+											</VuiBox>
+											<VuiBox sx={{ maxHeight: '75px' }}>
+												<LineChart
+													lineChartData={lineChartDataProfile2}
+													lineChartOptions={lineChartOptionsProfile2}
+												/>
+											</VuiBox>
+										</VuiBox>
+									</Grid>
+								</>
+								:
+								null
+
+						}
+
 					</Grid>
 				</Stack>
 			</VuiBox>

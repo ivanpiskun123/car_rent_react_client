@@ -141,9 +141,9 @@ function Tables() {
             message="Прокат окончен. Платёж создан"
             key={transition ? transition.name : ''}
         />
-        <Card  style={{marginBottom: "55px", marginTop: "30px"}}>
-
             <VuiBox display="flex" flexDirection="column" height="100%">
+
+                <Card  style={{marginBottom: "55px", marginTop: "30px"}}>
 
                 <Grid container spacing={3}>
                     <Grid item xs={8} md={8}>
@@ -164,7 +164,6 @@ function Tables() {
                             width: "165px"}}
                                 value={sort}
                                 onChange={e => setSort(e.target.value) }
-
                         >
                             <option value="active" selected>Сначала активные</option>
                             <option value="ended">Сначала оконченные</option>
@@ -192,7 +191,7 @@ function Tables() {
                 </VuiBox>
                     </Grid>
             </Grid>
-
+                </Card>
                 <Grid container spacing={3}>
         {
             isLoad ?
@@ -216,7 +215,7 @@ function Tables() {
                              height: '50vh',
                          }}
                     >
-                        <div style={{marginLeft: "500px"}} >
+                        <div style={{marginLeft: "500px", color: "white"}} >
                             Аренд не найдено
                         </div>
                     </Box>
@@ -326,7 +325,7 @@ function Tables() {
                 </Grid>
             </VuiBox>
             <CarModal carInfoOpen={carInfoOpen} setCarInfoOpen={setCarInfoOpen} carId={carId}/>
-        </Card>
+
 
             <Footer/>
     </DashboardLayout>

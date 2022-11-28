@@ -21,10 +21,10 @@
 import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
 import Billing from "layouts/billing";
-import RTL from "layouts/rtl";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import Users from "./layouts/users";
 
 // Vision UI Dashboard React icons
 import { IoRocketSharp } from "react-icons/io5";
@@ -42,7 +42,16 @@ const routes = [
     key: "dashboard",
     route: "/cars",
     icon: <IoHome size="15px" color="inherit" />,
-    component: Dashboard,
+    component:  Dashboard,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Пользователи",
+    key: "users",
+    route: "/users",
+    icon: <IoBuild size="15px" color="inherit" />,
+    component:  Users,
     noCollapse: true,
   },
   {

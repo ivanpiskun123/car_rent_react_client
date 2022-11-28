@@ -26,35 +26,76 @@ import VuiTypography from "components/VuiTypography";
 // Billing page components
 import Bill from "layouts/billing/components/Bill";
 
-function BillingInformation() {
+
+import { useQuery,useMutation, gql } from '@apollo/client';
+import {useContext} from "react";
+
+function BillingInformation({payments, setPayments, setPayOpen}) {
+
+    const PAY_FOR_PAYMENT = gql`
+      mutation($paymentId: Int!) {
+        payForPayment(paymentId: $paymentId){
+        payment{
+              amount
+              isPaid
+          }
+        }
+      }
+  `;
+
+    const [payPayment, {dataPay, loadingPay, errorPay}] = useMutation(PAY_FOR_PAYMENT)
+
+    const handlePay = async (id) =>{
+
+        try {
+            const dataPayment = await payPayment({
+                variables: {
+                    paymentId: parseInt(id),
+                }
+            })
+            setPayments(
+                payments.map((p)=>{
+                    if(p.id === id)
+                    {
+                        return {...p, isPaid: true}
+                    }
+                    return p
+                })
+            )
+            setPayOpen(true)
+        }
+        catch (e){
+            console.log(e)
+        }
+
+
+
+    }
+
   return (
     <Card id="delete-account">
       <VuiBox>
         <VuiTypography variant="lg" color="white" fontWeight="bold">
-          Billing Information
+          Открытые платежи
         </VuiTypography>
       </VuiBox>
       <VuiBox>
         <VuiBox component="ul" display="flex" flexDirection="column" p={0} m={0}>
-          <Bill
-            name="oliver liam"
-            company="viking burrito"
-            email="oliver@burrito.com"
-            vat="FRB1235476"
-          />
-          <Bill
-            name="lucas harper"
-            company="stone tech zone"
-            email="lucas@stone-tech.com"
-            vat="FRB1235476"
-          />
-          <Bill
-            name="ethan james"
-            company="fiber notion"
-            email="ethan@fiber.com"
-            vat="FRB1235476"
-            noGutter
-          />
+            {
+                payments.filter((p)=>!p.isPaid).length === 0 ?
+                    "Открытых платежей нет"
+                    :
+                payments.filter((p)=>!p.isPaid).map((p)=>
+                    <Bill
+                        name={p.rentedCarFullName}
+                        company={p.createdAt}
+                        email={p.amount}
+                        handlePay={()=>handlePay(p.id)}
+                        noGutter
+                    />
+                )
+            }
+
         </VuiBox>
       </VuiBox>
     </Card>

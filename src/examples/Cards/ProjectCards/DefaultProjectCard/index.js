@@ -30,27 +30,56 @@ import VuiBox from "components/VuiBox";
 import VuiTypography from "components/VuiTypography";
 import VuiButton from "components/VuiButton";
 import VuiAvatar from "components/VuiAvatar";
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
 
-function DefaultProjectCard({ image, label, title, description, action, authors }) {
-  const renderAuthors = authors.map(({ image: media, name }) => (
-    <Tooltip key={name} title={name} placement="bottom">
-      <VuiAvatar
-        src={media}
-        alt={name}
-        size="xs"
-        sx={({ borders: { borderWidth }, palette: { dark }, functions: { rgba } }) => ({
-          border: `${borderWidth[2]} solid ${rgba(dark.focus, 0.5)}`,
-          cursor: "pointer",
-          position: "relative",
-          ml: -1.25,
+import { useQuery,useMutation, gql } from '@apollo/client';
+import {useContext} from "react";
+import {AuthContext} from "../../../../context/AuthContext";
 
-          "&:hover, &:focus": {
-            zIndex: "10",
-          },
-        })}
-      />
-    </Tooltip>
-  ));
+function DefaultProjectCard({ image, label, title, description, action,user, setUser }) {
+
+
+    const CHANGE_USER_IMAGE = gql`
+      mutation($imageUrl: String!, $userId: Int!) {
+        changeOrCreateUserDoc(imageUrl: $imageUrl, userId: $userId){
+          document{
+            status 
+          }
+        }
+      }
+  `;
+
+    const [changeImage, { dataImage, loadingImage, errorImage }] = useMutation(CHANGE_USER_IMAGE);
+
+
+    const upload = (e)=>{
+        const dataRaw = new FormData()
+        dataRaw.append("file", e.target.files[0])
+        dataRaw.append("upload_preset", "zzpmbswm")
+        dataRaw.append("cloud_name","drntpsmxs")
+        fetch("https://api.cloudinary.com/v1_1/drntpsmxs/image/upload",{
+            method:"post",
+            body: dataRaw
+        })
+            .then(resp => resp.json())
+            .then(imageData => {
+                changeImage({variables: {imageUrl: imageData.url, userId: parseInt(user.id)}})
+                if(errorImage)
+                {console.log("Error while changing image: ", errorImage)}
+                else{
+                    setUser(prevUser => (
+                        {...prevUser,
+                            relationships: {...prevUser.relationships,
+                                document: {...prevUser.relationships.document,
+                                    meta: {status: 1, url: imageData.url}
+                                } }}
+                    )
+                    )
+                }
+            })
+            .catch(err => console.log(err))
+    }
 
   return (
     <VuiBox
@@ -68,7 +97,8 @@ function DefaultProjectCard({ image, label, title, description, action, authors 
         borderRadius="15px"
         sx={({ breakpoints }) => ({
           [breakpoints.up("xl")]: {
-            height: "200px",
+            height: "400px",
+              width: "500px"
           },
         })}
       />
@@ -88,23 +118,19 @@ function DefaultProjectCard({ image, label, title, description, action, authors 
         <VuiBox mb={1}>
           {action.type === "internal" ? (
             <VuiTypography
-              component={Link}
-              to={action.route}
+
               variant="h5"
               color="white"
-              textTransform="capitalize"
             >
               {title}
             </VuiTypography>
           ) : (
             <VuiTypography
-              component="a"
-              href={action.route}
-              target="_blank"
+
               rel="noreferrer"
               color="white"
               variant="h5"
-              textTransform="capitalize"
+
             >
               {title}
             </VuiTypography>
@@ -116,30 +142,34 @@ function DefaultProjectCard({ image, label, title, description, action, authors 
           </VuiTypography>
         </VuiBox>
         <VuiBox display="flex" justifyContent="space-between" alignItems="center">
-          {action.type === "internal" ? (
             <VuiButton
-              component={Link}
-              to={action.route}
               variant="outlined"
               size="small"
               color={action.color}
+              aria-label="upload picture"
+              component="label"
             >
+                <input hidden accept="image/*" type="file" name="images" onChange={upload}  />
               {action.label}
             </VuiButton>
-          ) : (
-            <VuiButton
-              component="a"
-              href={action.route}
-              target="_blank"
-              rel="noreferrer"
-              variant="outlined"
-              size="small"
-              color={action.color}
-            >
-              {action.label}
-            </VuiButton>
-          )}
-          <VuiBox display="flex">{renderAuthors}</VuiBox>
+          <VuiBox display="flex">
+              <Tooltip title="Рассмотреть права" placement="top">
+                  {
+                      user === null ?
+                          <a href="#" target="_blank">
+                              <IconButton   aria-label="add to shopping cart">
+                                  <Visibility />
+                              </IconButton>
+                          </a>
+                          :
+                          <a href={user.relationships.document.meta.url} target="_blank">
+                              <IconButton color="primary"  aria-label="add to shopping cart">
+                                  <Visibility />
+                              </IconButton>
+                          </a>
+                  }
+              </Tooltip>
+          </VuiBox>
         </VuiBox>
       </VuiBox>
     </VuiBox>

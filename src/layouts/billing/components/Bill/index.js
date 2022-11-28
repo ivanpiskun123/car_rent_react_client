@@ -29,7 +29,8 @@ import VuiButton from "components/VuiButton";
 import linearGradient from "assets/theme/functions/linearGradient";
 import colors from "assets/theme/base/colors";
 
-function Bill({ name, company, email, vat, noGutter }) {
+function Bill({ name, company, email, vat, noGutter, ...props }) {
+  const {handlePay} = props
   const { gradients } = colors;
   const { bill } = gradients;
 
@@ -74,18 +75,15 @@ function Bill({ name, company, email, vat, noGutter }) {
             })}
           >
             <VuiBox mr={1}>
-              <VuiButton variant="text" color="error">
-                <Icon sx={{ mr: "4px" }}>delete</Icon>&nbsp;DELETE
+              <VuiButton variant="text" color="success" onClick={()=>handlePay()}>
+                <Icon sx={{ mr: "4px" }}>payment</Icon>&nbsp;ОПЛАТИТЬ
               </VuiButton>
             </VuiBox>
-            <VuiButton variant="text" color="text">
-              <Icon sx={{ mr: "4px" }}>edit</Icon>&nbsp;EDIT
-            </VuiButton>
           </VuiBox>
         </VuiBox>
         <VuiBox mb={1} lineHeight={0}>
           <VuiTypography variant="caption" color="text">
-            Company Name:&nbsp;&nbsp;&nbsp;
+            Создана:&nbsp;&nbsp;&nbsp;
             <VuiTypography
               variant="caption"
               color="text"
@@ -98,18 +96,13 @@ function Bill({ name, company, email, vat, noGutter }) {
         </VuiBox>
         <VuiBox mb={1} lineHeight={0}>
           <VuiTypography variant="caption" color="text">
-            Email Address:&nbsp;&nbsp;&nbsp;
+            Сумма платежа:&nbsp;&nbsp;&nbsp;
             <VuiTypography variant="caption" fontWeight="regular" color="text">
               {email}
             </VuiTypography>
           </VuiTypography>
         </VuiBox>
-        <VuiTypography variant="caption" color="text">
-          VAT Number:&nbsp;&nbsp;&nbsp;
-          <VuiTypography variant="caption" fontWeight="regular" color="text">
-            {vat}
-          </VuiTypography>
-        </VuiTypography>
+
       </VuiBox>
     </VuiBox>
   );

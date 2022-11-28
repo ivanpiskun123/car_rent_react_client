@@ -113,7 +113,7 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const getRoutes = (allRoutes, isPublic) =>
+  const getRoutes = (allRoutes, isPublic, isAdminLogged) =>
       allRoutes.filter((r)=>{
         if(isPublic)
         {
@@ -123,7 +123,23 @@ export default function App() {
         {
           return !r.public
         }
-      }).map((route) => {
+      }).filter((r)=>{
+    if(isAdminLogged){
+      return (
+          r.route !== "/rents"
+          &&
+          r.route !== "/profile"
+          &&
+          r.route !== "/payments"
+      )
+    }
+    else
+    {
+      return (
+          r.route !== "/users"
+      )
+    }
+  }).map((route) => {
         if (route.collapse) {
           return getRoutes(route.collapse);
         }
@@ -133,7 +149,7 @@ export default function App() {
         }
 
         return null;
-      });
+      })
 
   const configsButton = (
     <VuiBox
@@ -189,13 +205,19 @@ export default function App() {
         <Switch>
           {
             isAuth ?
+                isAdmin ?
+                    <>
+                      {getRoutes(routes, false, true)}
+                      <Redirect from="*" to="/users" />
+                    </>
+                    :
                 <>
-                  {getRoutes(routes, false)}
-                  <Redirect from="*" to="/payments" />
+                  {getRoutes(routes, false,false)}
+                  <Redirect from="*" to="/cars" />
                 </>
                 :
                 <>
-                  {getRoutes(routes, true)}
+                  {getRoutes(routes, true, false)}
                   <Redirect from="*" to="/authentication/sign-in" />
                 </>
           }

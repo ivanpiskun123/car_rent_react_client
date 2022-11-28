@@ -44,11 +44,39 @@ import Header from "layouts/profile/components/Header";
 import PlatformSettings from "layouts/profile/components/PlatformSettings";
 import Welcome from "../profile/components/Welcome/index";
 import CarInformations from "./components/CarInformations";
+import {useEffect, useState, useContext} from "react";
+import {AuthContext} from "../../context/AuthContext";
+
+import UserService from "../../API/UserService";
+
 
 function Overview() {
+
+    const {currentUserId} = useContext(AuthContext)
+    const [user, setUser] = useState(null)
+    const [isLoad, setIsLoad] = useState(true)
+
+    useEffect(()=>{
+
+        const fetchUser = async () => {
+            try{
+                const response = await UserService.getById(currentUserId)
+                setUser(response.data.data.data)
+                console.log(response.data.data.data)
+                setIsLoad(false)
+            }
+            catch(e){
+                console.log(e)
+                setIsLoad(false)
+            }
+        }
+        fetchUser()
+
+    },[])
+
   return (
     <DashboardLayout>
-      <Header />
+      <Header user={user} />
       <VuiBox mt={5} mb={3}>
         <Grid
           container
@@ -71,7 +99,7 @@ function Overview() {
               },
             })}
           >
-            <Welcome />
+            <Welcome user={user}/>
           </Grid>
           <Grid
             item
@@ -84,7 +112,7 @@ function Overview() {
               },
             })}
           >
-            <CarInformations />
+            <CarInformations user={user} />
           </Grid>
           <Grid
             item
@@ -98,111 +126,67 @@ function Overview() {
             })}
           >
             <ProfileInfoCard
-              title="profile information"
-              description="Hi, I’m Mark Johnson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
+              title="Данные пользователя"
+              description="
+              Администрация Сайта, не исполнившая свои обязательства, несёт ответственность за убытки,
+                понесённые Пользователем в связи с неправомерным использованием персональных данных,
+                в соответствии с законодательством Республики Беларусь
+              "
               info={{
-                fullName: "Mark Johnson",
-                mobile: "(44) 123 1234 123",
-                email: "mark@simmmple.com",
-                location: "United States",
+                fullName: `${user === null ? "" :  `${user.attributes.first_name} ${user.attributes.second_name}`}`,
+                mobile: `${user === null ? "" :  `${user.attributes.phone}`}`,
+                email: `${user === null ? "" :  `${user.attributes.email}`}`,
+                location: "Беларусь",
               }}
-              social={[
-                {
-                  link: "https://www.facebook.com/CreativeTim/",
-                  icon: <FacebookIcon />,
-                  color: "facebook",
-                },
-                {
-                  link: "https://twitter.com/creativetim",
-                  icon: <TwitterIcon />,
-                  color: "twitter",
-                },
-                {
-                  link: "https://www.instagram.com/creativetimofficial/",
-                  icon: <InstagramIcon />,
-                  color: "instagram",
-                },
-              ]}
+
             />
           </Grid>
         </Grid>
       </VuiBox>
       <Grid container spacing={3} mb="30px">
-        <Grid item xs={12} xl={3} height="100%">
-          <PlatformSettings />
+        <Grid item xs={12} xl={6} height="100%">
+          <PlatformSettings user={user}/>
         </Grid>
-        <Grid item xs={12} xl={9}>
+        <Grid item xs={12} xl={6}>
           <Card>
             <VuiBox display="flex" flexDirection="column" height="100%">
               <VuiBox display="flex" flexDirection="column" mb="24px">
                 <VuiTypography color="white" variant="lg" fontWeight="bold" mb="6px">
-                  Любимые авто
+                  Водительские права
                 </VuiTypography>
                 <VuiTypography color="text" variant="button" fontWeight="regular">
-                  Арендованные прежде авто
+                  Ваши водительские права и статус верификации
                 </VuiTypography>
               </VuiBox>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6} xl={4}>
+
+                <Grid item xs={12} md={12} xl={12}>
                   <DefaultProjectCard
-                    image={profile1}
-                    label="project #2"
-                    title="modern"
-                    description="As Uber works through a huge amount of internal management turmoil."
+                    image={ user === null || (user.relationships.document.meta.url === null || user.relationships.document.meta.url === "") ? profile1 : user.relationships.document.meta.url}
+                    label="Загружено с Cloudinary"
+                    title={
+                      user === null ?
+                        "Загрузка..."
+                          :
+                          user.relationships.document.meta.status === 2 ?
+                              "Права верифицированы"
+                              :
+                              user.relationships.document.meta.status === 1 &&
+                              (user.relationships.document.meta.url !== null && user.relationships.document.meta.url !== "") ?
+                                  "В процессе верификации" :
+                                  "Верификация не пройдена. Загрузите новое фото"
+                    }
+                    description="*к аренде допускаются водители с верифицироваными водительскими правами"
                     action={{
-                      type: "internal",
-                      route: "/pages/profile/profile-overview",
                       color: "white",
-                      label: "VIEW ALL",
+                      label: "НОВОЕ ФОТО",
                     }}
-                    authors={[
-                      { image: team1, name: "Elena Morison" },
-                      { image: team2, name: "Ryan Milly" },
-                      { image: team3, name: "Nick Daniel" },
-                      { image: team4, name: "Peterson" },
-                    ]}
+
+                    user = {user}
+                    setUser = {setUser}
                   />
                 </Grid>
-                <Grid item xs={12} md={6} xl={4}>
-                  <DefaultProjectCard
-                    image={profile2}
-                    label="project #1"
-                    title="scandinavian"
-                    description="Music is something that every person has his or her own specific opinion about."
-                    action={{
-                      type: "internal",
-                      route: "/pages/profile/profile-overview",
-                      color: "white",
-                      label: "VIEW ALL",
-                    }}
-                    authors={[
-                      { image: team3, name: "Nick Daniel" },
-                      { image: team4, name: "Peterson" },
-                      { image: team1, name: "Elena Morison" },
-                      { image: team2, name: "Ryan Milly" },
-                    ]}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} xl={4}>
-                  <DefaultProjectCard
-                    image={profile3}
-                    label="project #3"
-                    title="minimalist"
-                    description="Different people have different taste, and various types of music."
-                    action={{
-                      type: "internal",
-                      route: "/pages/profile/profile-overview",
-                      color: "white",
-                      label: "VIEW ALL",
-                    }}
-                    authors={[
-                      { image: team4, name: "Peterson" },
-                      { image: team3, name: "Nick Daniel" },
-                      { image: team2, name: "Ryan Milly" },
-                      { image: team1, name: "Elena Morison" },
-                    ]}
-                  />
-                </Grid>
+
               </Grid>
             </VuiBox>
           </Card>

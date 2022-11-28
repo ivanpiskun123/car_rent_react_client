@@ -50,6 +50,8 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import bgSignIn from "assets/images/signUpImage.png";
 import {AuthContext} from "../../../context/AuthContext";
 import AuthService from "../../../API/AuthService";
+import Grid from "@mui/material/Grid";
+
 
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
@@ -61,7 +63,7 @@ function SignIn() {
   const [firstName, setFirstName] = useState("")
   const [secondName, setSecondName] = useState("")
   const [phone,setPhone] = useState("")
-
+  const [image, setImage] = useState("")
 
   const {setCurrentUserId, setIsAuth, setIsAdmin} = useContext(AuthContext)
 
@@ -73,7 +75,8 @@ function SignIn() {
          second_name: secondName,
          phone: phone,
          email: email,
-         password: password
+         password: password,
+          image: image
         }
         const response = await AuthService.register(user);
         localStorage.setItem("token", response.data.token);
@@ -89,6 +92,25 @@ function SignIn() {
     }
     authRegisterUser()
   }
+
+  // <input hidden accept="image/*" type="file" name="images" onChange={upload}  />
+
+  const upload = (e)=>{
+    const dataRaw = new FormData()
+    dataRaw.append("file", e.target.files[0])
+    dataRaw.append("upload_preset", "zzpmbswm")
+    dataRaw.append("cloud_name","drntpsmxs")
+    fetch("https://api.cloudinary.com/v1_1/drntpsmxs/image/upload",{
+      method:"post",
+      body: dataRaw
+    })
+        .then(resp => resp.json())
+        .then(imageData => {
+          setImage(imageData.url)
+        })
+        .catch(err => console.log(err))
+  }
+
 
   return (
     <CoverLayout
@@ -245,7 +267,44 @@ function SignIn() {
                 onChange={(e)=>setPassword(e.target.value)}
               />
             </GradientBorder>
+
           </VuiBox>
+
+          <Grid container>
+            <Grid item>
+              <VuiButton
+                  variant="outlined"
+                  size="small"
+                  color="white"
+                  aria-label="upload picture"
+                  component="label"
+                  style={{marginBottom: "20px", marginTop: "3px"}}
+              >
+                <input hidden accept="image/*" type="file" name="images" onChange={upload}  />
+                Фото
+              </VuiButton>
+            </Grid>
+
+            <Grid item md={1}>
+            </Grid>
+
+            <Grid item>
+              <VuiInput
+                  placeholder="Ваша фамилия..."
+                  sx={({ typography: { size } }) => ({
+                    fontSize: size.sm,
+                  })}
+                  value={image}
+              />
+            </Grid>
+
+          </Grid>
+
+
+
+
+
+
           <VuiBox display="flex" alignItems="center">
             <VuiSwitch color="info" checked={rememberMe} onChange={handleSetRememberMe} />
             <VuiTypography

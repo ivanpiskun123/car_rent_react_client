@@ -239,7 +239,7 @@ function Configurator() {
                 </VuiBox>
                 <VuiButton
                     component={Link}
-                    href="https://www.creative-tim.com/learning-lab/react/quick-start/vision-ui-dashboard/"
+                    href="http://localhost:3000/graphiql"
                     target="_blank"
                     rel="noreferrer"
                     color="info"

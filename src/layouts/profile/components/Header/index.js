@@ -37,8 +37,10 @@ import { IoBuild } from "react-icons/io5";
 // Vision UI Dashboard React example components
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { useEffect, useState } from "react";
+import Icon from "@mui/material/Icon";
 
-function Header() {
+
+function Header({user}) {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
 
@@ -127,26 +129,55 @@ function Header() {
               })}
             >
               <VuiTypography variant="lg" color="white" fontWeight="bold">
-                Mark Johnson
+                  {
+                      user === null
+                      ?
+                        null
+                          :
+                     `${user.attributes.first_name} ${user.attributes.second_name}`
+                  }
+
               </VuiTypography>
               <VuiTypography variant="button" color="text" fontWeight="regular">
-                mark@simmmple.com
+                  {
+                      user === null
+                          ?
+                          null
+                          :
+                          `${user.attributes.email}`
+                  }
               </VuiTypography>
             </VuiBox>
           </Grid>
           <Grid item xs={12} md={6} lg={6.5} xl={6} xxl={4} sx={{ ml: "auto" }}>
-            <AppBar position="static">
-              <Tabs
-                orientation={tabsOrientation}
-                value={tabValue}
-                onChange={handleSetTabValue}
-                sx={{ background: "transparent", display: "flex", justifyContent: "flex-end" }}
-              >
-                <Tab label="ОБЩЕЕ" icon={<IoCube color="white" size="16px" />} />
-                <Tab label="ВОДИТЕЛЬСКИЕ ПРАВА" icon={<IoDocument color="white" size="16px" />} />
-                <Tab label="БОНУСЫ" icon={<IoBuild color="white" size="16px" />} />
-              </Tabs>
-            </AppBar>
+              <VuiBox display="flex" flexDirection="column" mb="10px">
+                  <VuiTypography color="text" variant="button" fontWeight="regular">
+                      Водительские права {
+                      user === null ?
+                          null
+                          :
+                      user.relationships.document.meta.status === 2 ?
+                          <>
+                              верифицированы{" "}
+                              <Icon sx={{ mr: "4px" }}>check</Icon>&nbsp;
+                          </>
+                          :
+                          user.relationships.document.meta.status === 1 &&
+                          (user.relationships.document.meta.url !== null && user.relationships.document.meta.url !== "" ) ?
+                          <>
+                              на верификации{" "}
+                              <Icon sx={{ mr: "4px" }}>payment</Icon>&nbsp;
+                          </>
+                              :
+                              <>
+                                  не верифицированы. Пожалуйста, обновите фото прав{" "}
+                                  <Icon sx={{ mr: "4px" }}>error</Icon>&nbsp;
+                              </>
+                  }
+
+
+                  </VuiTypography>
+              </VuiBox>
           </Grid>
         </Grid>
       </Card>
